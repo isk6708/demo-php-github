@@ -100,7 +100,7 @@ $products = $pdo->query("SELECT * FROM products ORDER BY id DESC")->fetchAll();
             <?php endif; ?>
             <div class="grid">
                 <div>
-                    <label>Name</label>
+                    <label>Product Name</label>
                     <input type="text" name="name" required
                            value="<?= htmlspecialchars($editProduct['name'] ?? '') ?>">
                 </div>
@@ -127,7 +127,7 @@ $products = $pdo->query("SELECT * FROM products ORDER BY id DESC")->fetchAll();
         <table>
             <thead>
                 <tr>
-                    <th>ID</th><th>Name</th><th>Description</th>
+                    <th>ID</th><th>Product Name</th><th>Description</th>
                     <th>Price</th><th>Qty</th><th>Actions</th>
                 </tr>
             </thead>
