@@ -17,11 +17,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # 🛠️ Marketplace Action: Installs PHP and all your required extensions on Ubuntu
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2' # You can change this to 8.1, 8.3, etc.
+          extensions: mbstring, openssl, pdo_sqlite, sqlite3, zip
+          tools: composer:v2
+
       - name: Verify PHP & SQLite
         shell: bash
         run: |
           php -v
-          php -m | Select-String -Pattern "pdo_sqlite|sqlite3"
+          php -m | grep -E "pdo_sqlite|sqlite3"
 
       - name: Install Composer Dependencies
         shell: bash
@@ -29,4 +37,4 @@ jobs:
 
       - name: Run PHPUnit Tests
         shell: bash
-        run: vendor\bin\phpunit --testdox
+        run: vendor/bin/phpunit --testdox
