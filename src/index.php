@@ -85,7 +85,7 @@ $products = $pdo->query("SELECT * FROM products ORDER BY id DESC")->fetchAll();
 </head>
 <body>
 <div class="container">
-    <h1>📦 Product Manager - CRUD App Saya Using Git Pull</h1>
+    <h1>📦 Product Manager - HeiTech Padu Berhad</h1>
 
     <?php if ($message): ?>
         <div class="message"><?= htmlspecialchars($message) ?></div>
