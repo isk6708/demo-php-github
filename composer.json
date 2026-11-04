@@ -9,7 +9,7 @@
         "phpunit/phpunit": "^10.5"
     },
     "autoload": {
-        "files": ["src/db.php"]
+        "files": ["src/db.php", "src/analytics.php"]
     },
     "autoload-dev": {
         "psr-4": {

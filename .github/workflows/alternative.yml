@@ -76,11 +76,11 @@ jobs:
         shell: powershell
         run: |
           $deployDir = "C:\RajWork\2026\ESLearning\github\htp-deployment\demo-php-github\src"
-          if (-not (Test-Path (Join-Path $deployDir "index.php"))) {
-              throw "index.php missing in deployed src folder"
-          }
-          if (-not (Test-Path (Join-Path $deployDir "db.php"))) {
-              throw "db.php missing in deployed src folder"
+          $required = @("index.php", "db.php", "admin.php", "analytics.php")
+          foreach ($file in $required) {
+              if (-not (Test-Path (Join-Path $deployDir $file))) {
+                  throw "$file missing in deployed src folder"
+              }
           }
           Write-Host "Deployment smoke test passed - core files present"
 

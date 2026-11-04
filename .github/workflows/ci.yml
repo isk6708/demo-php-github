@@ -47,6 +47,12 @@ jobs:
           done
       - name: Verify response
         run: curl -sSf http://localhost:8118/ | grep -q "Product Manager"
+      - name: Verify admin dashboard
+        run: |
+          curl -sSf http://localhost:8118/admin.php > /tmp/admin.html
+          grep -q "Admin Dashboard" /tmp/admin.html
+          grep -q "Stock Health" /tmp/admin.html
+          grep -q "<svg" /tmp/admin.html
       - name: Cleanup
         if: always()
         run: docker rm -f app || true
