@@ -3,6 +3,7 @@ name: Test & Deploy via Git Pull
 on:
   push:
     branches: [ main ]
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -11,86 +12,29 @@ jobs:
   # ============================================================
   test:
     name: Unit Tests
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # 🛠️ Marketplace Action: Installs PHP and all your required extensions on Ubuntu
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2' # You can change this to 8.1, 8.3, etc.
+          extensions: mbstring, openssl, pdo_sqlite, sqlite3, zip
+          tools: composer:v2
+
       - name: Verify PHP & SQLite
-        shell: powershell
+        shell: bash
         run: |
           php -v
-          php -m | Select-String -Pattern "pdo_sqlite|sqlite3"
+          php -m | grep -E "pdo_sqlite|sqlite3"
 
       - name: Install Composer Dependencies
-        shell: powershell
+        shell: bash
         run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Run PHPUnit Tests
-        shell: powershell
-        run: vendor\bin\phpunit --testdox
-
-  # ============================================================
-  # Job 2: Deploy — only runs if tests pass
-  # ============================================================
-  deploy:
-    name: Deploy via Git Pull
-    runs-on: self-hosted
-    needs: test
-    steps:
-      - name: Pull Latest Code in Deployment Directory
-        shell: powershell
-        run: |
-          $deployDir = "C:\RajWork\2026\ESLearning\github\htp-deployment\demo-php-github"
-
-          if (-not (Test-Path $deployDir)) {
-              throw "Deployment directory not found: $deployDir. Clone the repo there first."
-          }
-
-          if (-not (Test-Path (Join-Path $deployDir ".git"))) {
-              throw "$deployDir is not a Git repository. Clone it first."
-          }
-
-          Set-Location $deployDir
-
-          Write-Host "Fetching from origin..."
-          git fetch --all --prune
-
-          $branch = "main"
-          Write-Host "Checking out branch: $branch"
-          git checkout $branch
-
-          Write-Host "Pulling latest commits..."
-          git pull --ff-only origin $branch
-
-          Write-Host ""
-          Write-Host "Deployed commit:"
-          git log -1 --oneline
-
-      - name: Install Composer Dependencies (Deployment)
-        shell: powershell
-        working-directory: C:\RajWork\2026\ESLearning\github\htp-deployment\demo-php-github
-        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Smoke Test Deployment
-        shell: powershell
-        run: |
-          $deployDir = "C:\RajWork\2026\ESLearning\github\htp-deployment\demo-php-github\src"
-          $required = @("index.php", "db.php", "admin.php", "analytics.php")
-          foreach ($file in $required) {
-              if (-not (Test-Path (Join-Path $deployDir $file))) {
-                  throw "$file missing in deployed src folder"
-              }
-          }
-          Write-Host "Deployment smoke test passed - core files present"
-
-      - name: Deployment Summary
-        shell: powershell
-        run: |
-          Write-Host "Deployment complete"
-          Write-Host "Commit: ${{ github.sha }}"
-          Write-Host "Deployed to: C:\RajWork\2026\ESLearning\github\htp-deployment\demo-php-github"
-          Write-Host ""
-          Write-Host "To run the app:"
-          Write-Host "  cd C:\RajWork\2026\ESLearning\github\htp-deployment\demo-php-github\src"
-          Write-Host "  php -S localhost:8118"
+        shell: bash
+        run: vendor/bin/phpunit --testdox
