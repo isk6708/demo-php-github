@@ -3,6 +3,7 @@ name: Test & Deploy via Git Pull
 on:
   push:
     branches: [ main ]
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -17,15 +18,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Verify PHP & SQLite
-        shell: powershell
+        shell: bash
         run: |
           php -v
           php -m | Select-String -Pattern "pdo_sqlite|sqlite3"
 
       - name: Install Composer Dependencies
-        shell: powershell
+        shell: bash
         run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Run PHPUnit Tests
-        shell: powershell
+        shell: bash
         run: vendor\bin\phpunit --testdox
