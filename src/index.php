@@ -105,7 +105,7 @@ $products = $pdo->query("SELECT * FROM products ORDER BY id DESC")->fetchAll();
                            value="<?= htmlspecialchars($editProduct['name'] ?? '') ?>">
                 </div>
                 <div>
-                    <label>Price</label>
+                    <label>Price (RM)</label>
                     <input type="number" name="price" step="0.01" min="0" required
                            value="<?= htmlspecialchars($editProduct['price'] ?? '') ?>">
                 </div>
