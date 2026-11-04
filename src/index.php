@@ -53,6 +53,7 @@ $products = $pdo->query("SELECT * FROM products ORDER BY id DESC")->fetchAll();
 <head>
     <meta charset="UTF-8">
     <title>Product Manager - CRUD App</title>
+    <sub>The changes define the product management system</sub>
     <style>
         * { box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
